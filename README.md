@@ -55,11 +55,24 @@ npm run build     # menghasilkan folder dist/
 npm run preview   # cek hasil build secara lokal
 ```
 
+**Versi online:** https://faisalamin7415-stack.github.io/
+
 Deploy folder `dist/` ke hosting statis apa pun:
 
 - **Vercel** — `vercel.json` sudah disertakan (rewrite SPA).
 - **Netlify** — `public/_redirects` sudah disertakan.
-- **Cloudflare Pages / GitHub Pages** — upload `dist/`, pastikan fallback ke `index.html`.
+- **Cloudflare Pages** — upload `dist/`, pastikan fallback ke `index.html`.
+
+### Deploy ulang ke GitHub Pages
+
+Situs ini dilayani dari branch `gh-pages` (bukan branch `main`). Setelah mengubah kode:
+
+```bash
+npm run build
+# lalu unggah isi dist/ ke branch gh-pages
+```
+
+Branch `main` menyimpan kode sumber; branch `gh-pages` hanya berisi hasil build.
 
 Setelah online lewat HTTPS, aplikasi bisa dipasang:
 

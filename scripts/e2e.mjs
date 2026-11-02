@@ -1,7 +1,7 @@
 import { chromium } from 'playwright-core'
 import { mkdirSync } from 'node:fs'
 
-const BASE = 'http://localhost:5173'
+const BASE = process.env.BASE_URL || 'http://localhost:5173'
 mkdirSync('shots', { recursive: true })
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true })
