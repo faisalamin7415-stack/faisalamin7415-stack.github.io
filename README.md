@@ -12,15 +12,16 @@ Aplikasi pencatat pengeluaran & pemasukan yang bisa dipasang di Android, iPhone,
 - **Grafik** — arus kas per jam, per hari, per bulan, per tahun; komposisi kategori; merchant terbesar.
 - **Cloud sync opsional** — Supabase (email + password) dengan strategi *last-write-wins*. Tanpa Supabase, aplikasi tetap berjalan penuh secara lokal.
 - **PWA installable** — service worker, offline shell, dan manifest. Bisa dipasang ke layar utama di semua perangkat.
+- **Pusat unduhan** — panduan pemasangan per platform (Android, iOS, Windows, macOS, Linux), paket web offline, dan pilihan mirror unduhan.
 - **Backup** — ekspor/impor JSON dan ekspor CSV untuk Excel.
 
 ## Palet & karakter visual
 
 | Warna | Hex | Pemakaian |
 | --- | --- | --- |
-| Maroon | `#6C151E` | Aksen pengeluaran, tombol utama mobile |
-| Deep Teal | `#0F3D3A` | Latar gradien, aksen pemasukan |
-| Cream | `#F5DABF` | Teks utama, garis halus, tombol terang |
+| Navy | `#141B2D` | Latar utama, kartu, gradien |
+| Deep Blue | `#0E3661` | Tombol utama, aksen, ikon |
+| White | `#FFFFFF` | Teks, tombol terang, garis halus |
 
 Tipografi: *Instrument Serif* untuk angka & judul, *Inter* untuk antarmuka. Tanpa gradien neon, tanpa kartu berlebihan — garis tipis, ruang lega, angka tabular.
 

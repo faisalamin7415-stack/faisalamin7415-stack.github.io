@@ -4,28 +4,29 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-ink-950: #040B09;
-  --color-ink-900: #07100E;
-  --color-ink-850: #0A1613;
-  --color-ink-800: #0C1B18;
-  --color-ink-700: #112622;
-  --color-ink-600: #18332E;
+  /* Palet: putih #FFFFFF, biru tua #0E3661, navy #141B2D */
+  --color-ink-950: #0D1322;
+  --color-ink-900: #141B2D;
+  --color-ink-850: #182238;
+  --color-ink-800: #1D2942;
+  --color-ink-700: #243352;
+  --color-ink-600: #2C3E63;
 
-  --color-teal-900: #0F3D3A;
-  --color-teal-700: #1B5A54;
-  --color-teal-500: #2F7A72;
-  --color-teal-300: #74B6AB;
-  --color-teal-200: #A7D3CA;
+  --color-teal-900: #0E3661;
+  --color-teal-700: #15497F;
+  --color-teal-500: #4D8FD6;
+  --color-teal-300: #8FB8E8;
+  --color-teal-200: #C7DCF5;
 
-  --color-maroon-900: #6C151E;
-  --color-maroon-700: #8E2B33;
-  --color-maroon-500: #B34A50;
-  --color-maroon-300: #D98A8A;
+  --color-maroon-900: #0E3661;
+  --color-maroon-700: #FFFFFF;
+  --color-maroon-500: #C9D2E3;
+  --color-maroon-300: #FFFFFF;
 
-  --color-cream: #F5DABF;
-  --color-cream-dim: #CDB69F;
-  --color-line: rgba(245, 218, 191, 0.11);
-  --color-line-strong: rgba(245, 218, 191, 0.2);
+  --color-cream: #FFFFFF;
+  --color-cream-dim: #C9D2E3;
+  --color-line: rgba(255, 255, 255, 0.12);
+  --color-line-strong: rgba(255, 255, 255, 0.24);
 
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
@@ -75,10 +76,10 @@
 @keyframes breathe {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(179, 74, 80, 0.45);
+    box-shadow: 0 0 0 0 rgba(77, 143, 214, 0.5);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(179, 74, 80, 0);
+    box-shadow: 0 0 0 14px rgba(77, 143, 214, 0);
   }
 }
 
@@ -106,9 +107,9 @@
     min-height: 100dvh;
     background-color: var(--color-ink-900);
     background-image:
-      radial-gradient(120% 80% at 12% -10%, rgba(15, 61, 58, 0.55) 0%, transparent 55%),
-      radial-gradient(90% 60% at 100% 0%, rgba(108, 21, 30, 0.28) 0%, transparent 50%),
-      radial-gradient(70% 50% at 50% 110%, rgba(15, 61, 58, 0.35) 0%, transparent 60%);
+      radial-gradient(120% 80% at 12% -10%, rgba(14, 54, 97, 0.9) 0%, transparent 58%),
+      radial-gradient(90% 60% at 100% 0%, rgba(77, 143, 214, 0.16) 0%, transparent 52%),
+      radial-gradient(70% 50% at 50% 110%, rgba(14, 54, 97, 0.55) 0%, transparent 62%);
     background-attachment: fixed;
     color: var(--color-cream);
     font-family: var(--font-sans);
@@ -128,7 +129,7 @@
   }
 
   ::selection {
-    background: rgba(245, 218, 191, 0.22);
+    background: rgba(255, 255, 255, 0.24);
     color: #fff;
   }
 
@@ -146,7 +147,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid rgba(245, 218, 191, 0.55);
+    outline: 2px solid rgba(143, 184, 232, 0.75);
     outline-offset: 2px;
   }
 
@@ -158,13 +159,13 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(245, 218, 191, 0.14);
+    background: rgba(255, 255, 255, 0.14);
     border-radius: 999px;
     border: 3px solid transparent;
     background-clip: content-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(245, 218, 191, 0.24);
+    background: rgba(255, 255, 255, 0.26);
     background-clip: content-box;
   }
 }
@@ -195,7 +196,7 @@
   }
 
   .btn-primary {
-    @apply bg-cream text-ink-900 hover:bg-white active:scale-[0.985];
+    @apply bg-cream text-ink-900 hover:bg-cream-dim active:scale-[0.985];
   }
 
   .btn-ghost {

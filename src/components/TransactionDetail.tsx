@@ -158,7 +158,7 @@ export function TransactionDetail({
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="btn bg-maroon-700 px-3 py-2 text-[12px] text-cream hover:bg-maroon-500"
+                  className="btn bg-cream px-3 py-2 text-[12px] text-ink-900 hover:bg-cream-dim"
                 >
                   Ya, hapus
                 </button>

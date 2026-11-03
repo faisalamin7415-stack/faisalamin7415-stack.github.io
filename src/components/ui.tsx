@@ -6,11 +6,11 @@ export function Logo({ compact = false }: { compact?: boolean }) {
     <div className="flex items-center gap-2.5">
       <span className="relative grid h-9 w-9 place-items-center rounded-[11px] bg-teal-900 ring-1 ring-cream/20">
         <svg viewBox="0 0 512 512" className="h-[26px] w-[26px]" aria-hidden>
-          <circle cx="256" cy="256" r="150" fill="#6C151E" />
-          <circle cx="256" cy="256" r="150" fill="none" stroke="#F5DABF" strokeWidth="14" />
-          <rect x="196" y="164" width="34" height="184" rx="9" fill="#F5DABF" />
-          <rect x="230" y="164" width="90" height="34" rx="9" fill="#F5DABF" />
-          <rect x="230" y="241" width="68" height="34" rx="9" fill="#F5DABF" />
+          <circle cx="256" cy="256" r="150" fill="#141B2D" />
+          <circle cx="256" cy="256" r="150" fill="none" stroke="#FFFFFF" strokeWidth="14" />
+          <rect x="196" y="164" width="34" height="184" rx="9" fill="#FFFFFF" />
+          <rect x="230" y="164" width="90" height="34" rx="9" fill="#FFFFFF" />
+          <rect x="230" y="241" width="68" height="34" rx="9" fill="#FFFFFF" />
         </svg>
       </span>
       {!compact && (
@@ -186,7 +186,7 @@ export function CategoryBadge({ color, children }: { color: string; children: Re
   )
 }
 
-export function ProgressBar({ value, color = '#F5DABF' }: { value: number; color?: string }) {
+export function ProgressBar({ value, color = '#FFFFFF' }: { value: number; color?: string }) {
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-cream/[0.07]">
       <div
@@ -199,10 +199,10 @@ export function ProgressBar({ value, color = '#F5DABF' }: { value: number; color
 
 export function Dot({ tone = 'cream' }: { tone?: 'cream' | 'teal' | 'maroon' | 'muted' }) {
   const colors = {
-    cream: '#F5DABF',
-    teal: '#74B6AB',
-    maroon: '#D98A8A',
-    muted: 'rgba(245,218,191,0.3)',
+    cream: '#FFFFFF',
+    teal: '#8FB8E8',
+    maroon: '#C9D2E3',
+    muted: 'rgba(255,255,255,0.3)',
   }
   return <span className="h-1.5 w-1.5 rounded-full" style={{ background: colors[tone] }} />
 }

@@ -42,7 +42,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               className="h-1.5 w-1.5 shrink-0 rounded-full"
               style={{
                 background:
-                  item.tone === 'error' ? '#D9736B' : item.tone === 'success' ? '#4E9B8F' : '#F5DABF',
+                  item.tone === 'error' ? '#FFFFFF' : item.tone === 'success' ? '#8FB8E8' : '#FFFFFF',
               }}
             />
             <span className="leading-snug">{item.message}</span>

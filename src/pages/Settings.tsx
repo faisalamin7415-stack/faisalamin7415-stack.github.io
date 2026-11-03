@@ -383,6 +383,9 @@ export function Settings() {
               <Download size={16} /> Pasang Faiz.Money sekarang
             </button>
           )}
+          <a href="#unduh" className="btn-ghost w-full justify-center py-2.5 text-[12px]">
+            <Download size={14} /> Buka pusat unduhan
+          </a>
           <ul className="space-y-2 text-[11.5px] leading-relaxed text-cream/45">
             <li className="flex gap-2">
               <span className="text-cream/25">iPhone</span>

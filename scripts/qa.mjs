@@ -1,7 +1,7 @@
 import { chromium } from 'playwright-core'
 
-const BASE = 'http://localhost:5173'
-const routes = ['beranda', 'transaksi', 'laporan', 'pengaturan']
+const BASE = process.env.BASE_URL || 'http://localhost:5173'
+const routes = ['beranda', 'transaksi', 'laporan', 'unduh', 'pengaturan']
 
 const browser = await chromium.launch({ channel: 'chrome', headless: true })
 

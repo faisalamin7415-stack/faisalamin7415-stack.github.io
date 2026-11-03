@@ -54,7 +54,7 @@ export function DetectedCard({
   trailing?: ReactNode
 }) {
   const accent =
-    tone === 'maroon' ? '#B34A50' : tone === 'teal' ? '#4E9B8F' : 'rgba(245,218,191,0.4)'
+    tone === 'maroon' ? '#FFFFFF' : tone === 'teal' ? '#8FB8E8' : 'rgba(255,255,255,0.4)'
   return (
     <div className="flex items-start gap-3 rounded-xl border border-line bg-ink-900/60 p-3.5">
       <span

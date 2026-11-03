@@ -9,26 +9,26 @@ export interface Category {
 }
 
 export const EXPENSE_CATEGORIES: Category[] = [
-  { id: 'makanan', label: 'Makan & Minum', type: 'expense', color: '#B45A4C', icon: 'utensils' },
-  { id: 'belanja', label: 'Belanja', type: 'expense', color: '#C9A227', icon: 'shopping-bag' },
-  { id: 'transportasi', label: 'Transportasi', type: 'expense', color: '#5C7C8A', icon: 'car' },
-  { id: 'tagihan', label: 'Tagihan', type: 'expense', color: '#8E2B33', icon: 'receipt' },
-  { id: 'kesehatan', label: 'Kesehatan', type: 'expense', color: '#6D8B74', icon: 'heart-pulse' },
-  { id: 'hiburan', label: 'Hiburan', type: 'expense', color: '#9C6B8E', icon: 'clapperboard' },
-  { id: 'tempat-tinggal', label: 'Tempat Tinggal', type: 'expense', color: '#A9744F', icon: 'home' },
-  { id: 'pendidikan', label: 'Pendidikan', type: 'expense', color: '#2F7A72', icon: 'graduation-cap' },
-  { id: 'donasi', label: 'Donasi', type: 'expense', color: '#7C8B4F', icon: 'hand-heart' },
-  { id: 'keluarga', label: 'Keluarga', type: 'expense', color: '#A25C6B', icon: 'users' },
-  { id: 'lainnya', label: 'Lainnya', type: 'expense', color: '#7A7A72', icon: 'circle-ellipsis' },
+  { id: 'makanan', label: 'Makan & Minum', type: 'expense', color: '#4D8FD6', icon: 'utensils' },
+  { id: 'belanja', label: 'Belanja', type: 'expense', color: '#8FB8E8', icon: 'shopping-bag' },
+  { id: 'transportasi', label: 'Transportasi', type: 'expense', color: '#2E6DB4', icon: 'car' },
+  { id: 'tagihan', label: 'Tagihan', type: 'expense', color: '#C7DCF5', icon: 'receipt' },
+  { id: 'kesehatan', label: 'Kesehatan', type: 'expense', color: '#6FA3DE', icon: 'heart-pulse' },
+  { id: 'hiburan', label: 'Hiburan', type: 'expense', color: '#A9C8EC', icon: 'clapperboard' },
+  { id: 'tempat-tinggal', label: 'Tempat Tinggal', type: 'expense', color: '#17497F', icon: 'home' },
+  { id: 'pendidikan', label: 'Pendidikan', type: 'expense', color: '#5B9BD5', icon: 'graduation-cap' },
+  { id: 'donasi', label: 'Donasi', type: 'expense', color: '#9CC2EA', icon: 'hand-heart' },
+  { id: 'keluarga', label: 'Keluarga', type: 'expense', color: '#3A78BE', icon: 'users' },
+  { id: 'lainnya', label: 'Lainnya', type: 'expense', color: '#7C93B3', icon: 'circle-ellipsis' },
 ]
 
 export const INCOME_CATEGORIES: Category[] = [
-  { id: 'gaji', label: 'Gaji', type: 'income', color: '#2F7A72', icon: 'wallet' },
-  { id: 'bonus', label: 'Bonus', type: 'income', color: '#C9A227', icon: 'sparkles' },
-  { id: 'usaha', label: 'Usaha', type: 'income', color: '#6D8B74', icon: 'store' },
-  { id: 'investasi', label: 'Investasi', type: 'income', color: '#5C7C8A', icon: 'trending-up' },
-  { id: 'hadiah', label: 'Hadiah', type: 'income', color: '#9C6B8E', icon: 'gift' },
-  { id: 'lainnya-masuk', label: 'Lainnya', type: 'income', color: '#7A7A72', icon: 'circle-ellipsis' },
+  { id: 'gaji', label: 'Gaji', type: 'income', color: '#4D8FD6', icon: 'wallet' },
+  { id: 'bonus', label: 'Bonus', type: 'income', color: '#8FB8E8', icon: 'sparkles' },
+  { id: 'usaha', label: 'Usaha', type: 'income', color: '#2E6DB4', icon: 'store' },
+  { id: 'investasi', label: 'Investasi', type: 'income', color: '#C7DCF5', icon: 'trending-up' },
+  { id: 'hadiah', label: 'Hadiah', type: 'income', color: '#6FA3DE', icon: 'gift' },
+  { id: 'lainnya-masuk', label: 'Lainnya', type: 'income', color: '#7C93B3', icon: 'circle-ellipsis' },
 ]
 
 export const ALL_CATEGORIES = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES]

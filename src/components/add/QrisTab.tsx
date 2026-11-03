@@ -240,7 +240,7 @@ export function QrisTab({ onSave }: { onSave: (draft: Draft) => Promise<void> })
                 <span className="absolute -bottom-px -left-px h-6 w-6 rounded-bl-2xl border-b-2 border-l-2 border-cream" />
                 <span className="absolute -bottom-px -right-px h-6 w-6 rounded-br-2xl border-b-2 border-r-2 border-cream" />
                 <div
-                  className="absolute inset-x-2 top-1/2 h-0.5 bg-cream/70 shadow-[0_0_12px_rgba(245,218,191,0.7)]"
+                  className="absolute inset-x-2 top-1/2 h-0.5 bg-cream/70 shadow-[0_0_12px_rgba(255,255,255,0.7)]"
                   style={{ animation: 'sweep 2s ease-in-out infinite alternate' }}
                 />
               </div>

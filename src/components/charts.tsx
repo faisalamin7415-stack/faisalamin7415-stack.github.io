@@ -76,22 +76,22 @@ export function CashflowChart({
     <div style={{ height }} className="w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 8, right: 2, bottom: 0, left: 2 }} barGap={2}>
-          <CartesianGrid vertical={false} stroke="rgba(245,218,191,0.07)" strokeDasharray="2 4" />
+          <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.08)" strokeDasharray="2 4" />
           <XAxis
             dataKey="label"
             tickLine={false}
             axisLine={false}
             interval={dense ? Math.ceil(buckets.length / 8) - 1 : 0}
-            tick={{ fill: 'rgba(245,218,191,0.35)', fontSize: 10 }}
+            tick={{ fill: 'rgba(255,255,255,0.38)', fontSize: 10 }}
             dy={6}
           />
           <Tooltip
-            cursor={{ fill: 'rgba(245,218,191,0.04)' }}
+            cursor={{ fill: 'rgba(255,255,255,0.05)' }}
             content={<ChartTooltip labels={labels} />}
           />
           <Bar
             dataKey="expense"
-            fill="#8E2B33"
+            fill="#FFFFFF"
             radius={[3, 3, 0, 0]}
             maxBarSize={dense ? 10 : 22}
             isAnimationActive={false}
@@ -99,7 +99,7 @@ export function CashflowChart({
           {showIncome && (
             <Bar
               dataKey="income"
-              fill="#2F7A72"
+              fill="#4D8FD6"
               radius={[3, 3, 0, 0]}
               maxBarSize={dense ? 10 : 22}
               isAnimationActive={false}
@@ -113,7 +113,7 @@ export function CashflowChart({
 
 export function Sparkline({ values, tone = 'cream' }: { values: number[]; tone?: 'cream' | 'teal' }) {
   const data = values.map((v, i) => ({ i, v }))
-  const color = tone === 'teal' ? '#74B6AB' : '#F5DABF'
+  const color = tone === 'teal' ? '#8FB8E8' : '#FFFFFF'
   const id = `spark-${tone}`
   return (
     <div className="h-12 w-full">

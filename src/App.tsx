@@ -7,8 +7,9 @@ import { Dashboard } from './pages/Dashboard'
 import { Transactions } from './pages/Transactions'
 import { Reports } from './pages/Reports'
 import { Settings } from './pages/Settings'
+import { Download } from './pages/Download'
 
-const ROUTES: RouteId[] = ['beranda', 'transaksi', 'laporan', 'pengaturan']
+const ROUTES: RouteId[] = ['beranda', 'transaksi', 'laporan', 'unduh', 'pengaturan']
 
 function readRoute(): RouteId {
   const hash = window.location.hash.replace(/^#\/?/, '')
@@ -37,6 +38,7 @@ export default function App() {
           {route === 'beranda' && <Dashboard />}
           {route === 'transaksi' && <Transactions />}
           {route === 'laporan' && <Reports />}
+          {route === 'unduh' && <Download />}
           {route === 'pengaturan' && <Settings />}
         </AppShell>
         <AddSheet />

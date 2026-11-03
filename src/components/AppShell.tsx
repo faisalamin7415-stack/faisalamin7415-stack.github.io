@@ -11,12 +11,20 @@ import { useApp } from '../store/app'
 import { Logo } from './ui'
 import { SyncBadge } from './SyncBadge'
 
-export type RouteId = 'beranda' | 'transaksi' | 'laporan' | 'pengaturan'
+export type RouteId = 'beranda' | 'transaksi' | 'laporan' | 'unduh' | 'pengaturan'
 
 const NAV: Array<{ id: RouteId; label: string; icon: typeof Home }> = [
   { id: 'beranda', label: 'Beranda', icon: Home },
   { id: 'transaksi', label: 'Transaksi', icon: ArrowLeftRight },
   { id: 'laporan', label: 'Laporan', icon: ChartNoAxesColumn },
+  { id: 'pengaturan', label: 'Pengaturan', icon: Settings },
+]
+
+const SIDEBAR_NAV: Array<{ id: RouteId; label: string; icon: typeof Home }> = [
+  { id: 'beranda', label: 'Beranda', icon: Home },
+  { id: 'transaksi', label: 'Transaksi', icon: ArrowLeftRight },
+  { id: 'laporan', label: 'Laporan', icon: ChartNoAxesColumn },
+  { id: 'unduh', label: 'Unduh', icon: Download },
   { id: 'pengaturan', label: 'Pengaturan', icon: Settings },
 ]
 
@@ -48,7 +56,7 @@ export function AppShell({
         </div>
 
         <nav className="mt-6 space-y-0.5 px-3" aria-label="Navigasi utama">
-          {NAV.map((item) => {
+          {SIDEBAR_NAV.map((item) => {
             const Icon = item.icon
             const active = route === item.id
             return (
@@ -109,16 +117,16 @@ export function AppShell({
         <div className="flex items-center justify-between px-4 py-3">
           <Logo />
           <div className="flex items-center gap-2">
-            {canInstall && (
-              <button
-                type="button"
-                onClick={() => void installApp()}
-                aria-label="Pasang aplikasi"
-                className="grid h-8 w-8 place-items-center rounded-full border border-line text-cream/60"
-              >
-                <Download size={15} />
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => onNavigate('unduh')}
+              aria-label="Pusat unduhan"
+              className={`grid h-8 w-8 place-items-center rounded-full border text-cream/60 ${
+                route === 'unduh' ? 'border-cream/30 bg-cream/[0.07] text-cream' : 'border-line'
+              }`}
+            >
+              <Download size={15} />
+            </button>
             <SyncBadge compact />
           </div>
         </div>

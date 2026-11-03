@@ -5,30 +5,30 @@ export function SyncBadge({ compact = false }: { compact?: boolean }) {
   const { cloud, user, syncState, syncError } = useApp()
 
   let label = 'Mode lokal'
-  let color = 'rgba(245,218,191,0.35)'
+  let color = 'rgba(255,255,255,0.35)'
   let icon = <CloudOff size={13} />
 
   if (!cloud) {
     label = 'Mode lokal'
   } else if (!user) {
     label = 'Belum masuk'
-    color = 'rgba(245,218,191,0.45)'
+    color = 'rgba(255,255,255,0.45)'
     icon = <CloudOff size={13} />
   } else if (syncState === 'syncing') {
     label = 'Menyinkronkan'
-    color = '#74B6AB'
+    color = '#8FB8E8'
     icon = <LoaderCircle size={13} className="animate-spin" />
   } else if (syncState === 'error') {
     label = 'Gagal sinkron'
-    color = '#D98A8A'
+    color = '#FFFFFF'
     icon = <CloudOff size={13} />
   } else if (syncState === 'offline') {
     label = 'Offline'
-    color = 'rgba(245,218,191,0.45)'
+    color = 'rgba(255,255,255,0.45)'
     icon = <WifiOff size={13} />
   } else {
     label = 'Tersinkron'
-    color = '#74B6AB'
+    color = '#8FB8E8'
     icon = <Cloud size={13} />
   }
 
