@@ -53,6 +53,15 @@ async function audit(label, viewport, mobile = false) {
     check('Manifest warna baru', manifest?.background_color === '#141B2D' && manifest?.theme_color === '#0E3661', JSON.stringify(manifest && { bg: manifest.background_color, theme: manifest.theme_color }))
   }
 
+  if (label === 'mobile') {
+    await page.goto(`${BASE}/#beranda`, { waitUntil: 'networkidle' })
+    await page.waitForTimeout(500)
+    await page.getByRole('button', { name: 'Pusat unduhan' }).click()
+    await page.waitForTimeout(500)
+    const bodyAfter = await page.locator('body').innerText()
+    check('Navigasi header ke unduhan', page.url().includes('#unduh') && bodyAfter.includes('Satu aplikasi'))
+  }
+
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)
   check(`[${label}] Tidak ada overflow horizontal`, !overflow)
   check(`[${label}] Tanpa console error`, errors.length === 0, errors.slice(0, 2).join(' | '))
