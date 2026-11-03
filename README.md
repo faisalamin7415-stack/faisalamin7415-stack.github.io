@@ -70,10 +70,12 @@ Situs ini dilayani dari branch `gh-pages` (bukan branch `main`). Setelah menguba
 
 ```bash
 npm run build
-# lalu unggah isi dist/ ke branch gh-pages
+npm run pack:downloads   # membuat dist/downloads/Faiz.Money-web.zip + latest.json
+# unggah isi dist/ ke branch gh-pages
+gh release upload v1.0.0 dist/downloads/Faiz.Money-web.zip --clobber
 ```
 
-Branch `main` menyimpan kode sumber; branch `gh-pages` hanya berisi hasil build.
+Branch `main` menyimpan kode sumber; branch `gh-pages` hanya berisi hasil build. Naikkan `version` di `package.json` dan buat tag rilis baru untuk versi berikutnya.
 
 Setelah online lewat HTTPS, aplikasi bisa dipasang:
 
