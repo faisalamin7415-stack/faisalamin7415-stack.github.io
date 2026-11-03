@@ -56,7 +56,7 @@ npm run build     # menghasilkan folder dist/
 npm run preview   # cek hasil build secara lokal
 ```
 
-**Versi online:** https://faisalamin7415-stack.github.io/
+> **Status publikasi:** situs `https://faisalamin7415-stack.github.io/` sedang **tidak dipublikasikan** (GitHub Pages diarahkan ke branch `offline` yang kosong, sehingga URL mengembalikan 404). Kode dan release tetap tersimpan.
 
 Deploy folder `dist/` ke hosting statis apa pun:
 
@@ -76,6 +76,13 @@ gh release upload v1.0.0 dist/downloads/Faiz.Money-web.zip --clobber
 ```
 
 Branch `main` menyimpan kode sumber; branch `gh-pages` hanya berisi hasil build. Naikkan `version` di `package.json` dan buat tag rilis baru untuk versi berikutnya.
+
+Untuk **menerbitkan lagi** situs setelah dinonaktifkan, kembalikan sumber Pages ke `gh-pages`:
+
+```bash
+gh api -X PUT repos/faisalamin7415-stack/faisalamin7415-stack.github.io/pages \
+  -f "source[branch]=gh-pages" -f "source[path]=/"
+```
 
 Setelah online lewat HTTPS, aplikasi bisa dipasang:
 
