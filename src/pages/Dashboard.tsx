@@ -16,9 +16,10 @@ import {
 } from 'lucide-react'
 import { db } from '../lib/db'
 import { formatIDR } from '../lib/money'
-import { categoryBreakdown, summarize, type Bucket } from '../lib/stats'
+import { categoryBreakdown, monthlyIncome, summarize, type Bucket } from '../lib/stats'
 import { useApp } from '../store/app'
 import { CashflowChart, CategoryBreakdown, Sparkline } from '../components/charts'
+import { MonthlyIncomeMini } from '../components/MonthlyIncome'
 import { TransactionRow } from '../components/TransactionList'
 import { TransactionDetail } from '../components/TransactionDetail'
 import { EmptyState, Segmented } from '../components/ui'
@@ -67,6 +68,7 @@ export function Dashboard() {
   const weekExpense = dayBuckets.reduce((s, b) => s + b.expense, 0)
   const sparkValues = dayBuckets.map((b) => b.expense)
   const categories = categoryBreakdown(monthTx, 'expense')
+  const incomeMonthly = useMemo(() => monthlyIncome(transactions), [transactions])
   const recent = [...transactions].sort((a, b) => (a.occurredAt < b.occurredAt ? 1 : -1)).slice(0, 6)
 
   const hour = now.getHours()
@@ -230,6 +232,9 @@ export function Dashboard() {
         </div>
 
         <div className="space-y-5">
+          {/* monthly income */}
+          <MonthlyIncomeMini data={incomeMonthly} />
+
           {/* today */}
           <section className="card p-4 sm:p-5">
             <div className="flex items-center justify-between">

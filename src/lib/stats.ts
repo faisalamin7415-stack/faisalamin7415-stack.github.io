@@ -143,6 +143,76 @@ export function percentChange(current: number, previous: number): number | null 
   return ((current - previous) / previous) * 100
 }
 
+export interface MonthlyIncomeRow {
+  /** yyyy-MM */
+  key: string
+  /** Nama bulan singkat, mis. "Nov" */
+  label: string
+  /** Nama bulan lengkap, mis. "November 2026" */
+  fullLabel: string
+  total: number
+  count: number
+}
+
+export interface MonthlyIncomeSummary {
+  /** Urut dari bulan terlama ke bulan terbaru. */
+  months: MonthlyIncomeRow[]
+  current: MonthlyIncomeRow
+  previous: MonthlyIncomeRow
+  total: number
+  average: number
+  best: MonthlyIncomeRow | null
+}
+
+/**
+ * Gabungkan seluruh pemasukan menjadi satu angka per bulan, sehingga pengguna
+ * bisa langsung tahu berapa pemasukan mereka di setiap bulan.
+ */
+export function monthlyIncome(
+  txs: Transaction[],
+  monthsBack = 12,
+  anchor: Date = new Date(),
+): MonthlyIncomeSummary {
+  const end = startOfMonth(anchor)
+  const start = new Date(end.getFullYear(), end.getMonth() - (monthsBack - 1), 1)
+  const incomes = txs.filter((t) => !t.deleted && t.type === 'income')
+
+  const months: MonthlyIncomeRow[] = eachMonthOfInterval({ start, end }).map((d) => {
+    const items = incomes.filter((t) => {
+      const td = new Date(t.occurredAt)
+      return td.getFullYear() === d.getFullYear() && td.getMonth() === d.getMonth()
+    })
+    return {
+      key: format(d, 'yyyy-MM'),
+      label: format(d, 'MMM', { locale: localeId }),
+      fullLabel: format(d, 'MMMM yyyy', { locale: localeId }),
+      total: items.reduce((s, t) => s + t.amount, 0),
+      count: items.length,
+    }
+  })
+
+  const total = months.reduce((s, m) => s + m.total, 0)
+  const best = months.reduce<MonthlyIncomeRow | null>(
+    (top, m) => (m.total > 0 && (!top || m.total > top.total) ? m : top),
+    null,
+  )
+
+  return {
+    months,
+    current: months[months.length - 1],
+    previous: months[months.length - 2] ?? {
+      key: '',
+      label: '',
+      fullLabel: '',
+      total: 0,
+      count: 0,
+    },
+    total,
+    average: months.length ? total / months.length : 0,
+    best,
+  }
+}
+
 export function groupByDay(txs: Transaction[]): Array<{ day: string; items: Transaction[] }> {
   const map = new Map<string, Transaction[]>()
   for (const t of txs) {

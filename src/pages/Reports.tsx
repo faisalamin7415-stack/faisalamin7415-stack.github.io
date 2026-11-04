@@ -10,12 +10,14 @@ import {
   buildBuckets,
   categoryBreakdown,
   inRange,
+  monthlyIncome,
   percentChange,
   previousRange,
   summarize,
   type RangeMode,
 } from '../lib/stats'
 import { CashflowChart, CategoryBreakdown } from '../components/charts'
+import { MonthlyIncomeCard } from '../components/MonthlyIncome'
 import { Segmented } from '../components/ui'
 
 const MODES: Array<{ value: RangeMode; label: string }> = [
@@ -56,6 +58,7 @@ export function Reports() {
 
   const expenseDelta = percentChange(summary.expense, prev.expense)
   const categories = categoryBreakdown(rangeTx, catType)
+  const incomeMonthly = useMemo(() => monthlyIncome(transactions), [transactions])
 
   const merchants = useMemo(() => {
     const map = new Map<string, number>()
@@ -127,6 +130,8 @@ export function Reports() {
         </div>
         <CashflowChart buckets={buckets} height={260} />
       </section>
+
+      <MonthlyIncomeCard data={incomeMonthly} />
 
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="card p-4 sm:p-5">

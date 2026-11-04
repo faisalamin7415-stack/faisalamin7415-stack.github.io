@@ -10,6 +10,7 @@ Aplikasi pencatat pengeluaran & pemasukan yang bisa dipasang di Android (APK), i
 - **Foto nota (OCR)** — Tesseract.js membaca struk di perangkat, menebak merchant, total, dan tanggal. Foto tidak pernah diunggah ke server.
 - **Scan QRIS** — kamera atau gambar QRIS dibaca dengan parser EMVCo (nama merchant, kota, NMID, nominal QR dinamis, validasi CRC16).
 - **Grafik** — arus kas per jam, per hari, per bulan, per tahun; komposisi kategori; merchant terbesar.
+- **Rekap pemasukan bulanan** — semua pemasukan digabung jadi satu angka per bulan. Ringkasan bulan berjalan tampil di Beranda, dan rincian 12 bulan (total, rata-rata, bulan terbaik) ada di Laporan.
 - **Cloud sync opsional** — Supabase (email + password) dengan strategi *last-write-wins*. Tanpa Supabase, aplikasi tetap berjalan penuh secara lokal.
 - **PWA installable** — service worker, offline shell, dan manifest. Bisa dipasang ke layar utama di semua perangkat.
 - **APK Android** — aplikasi asli (Capacitor) yang membundel seluruh aset, mesin OCR, dan model bahasa di dalam paket. Tidak butuh situs web dan tetap jalan offline.
@@ -73,7 +74,7 @@ Situs ini dilayani dari branch `gh-pages` (bukan branch `main`). Setelah menguba
 npm run build
 npm run pack:downloads   # membuat dist/downloads/Faiz.Money-web.zip + latest.json
 # unggah isi dist/ ke branch gh-pages
-gh release upload v1.0.0 dist/downloads/Faiz.Money-web.zip dist/downloads/Faiz.Money.apk --clobber
+gh release upload v1.1.0 dist/downloads/Faiz.Money-web.zip dist/downloads/Faiz.Money.apk --clobber
 ```
 
 ### Build APK Android
