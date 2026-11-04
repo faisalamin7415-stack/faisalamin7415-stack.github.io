@@ -15,3 +15,11 @@ shots
 tmp-test
 *.zip
 Faiz.Money-QR.png
+
+# Aset OCR besar (dibuat ulang dengan: npm run ocr:assets)
+public/tesseract/
+public/tessdata/
+
+# Signing Android (jangan di-commit)
+android/keystore/
+android/keystore.properties

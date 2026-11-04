@@ -64,6 +64,11 @@ export async function readReceipt(
 
   onProgress?.({ status: 'Menyiapkan mesin OCR', progress: 0.02 })
   const worker = await createWorker('ind+eng', 1, {
+    // Semua aset OCR dibundel di aplikasi supaya tetap jalan tanpa internet.
+    workerPath: '/tesseract/worker.min.js',
+    corePath: '/tesseract/core',
+    langPath: '/tessdata',
+    gzip: false,
     logger: (m: { status: string; progress: number }) => {
       onProgress?.({ status: humanStatus(m.status), progress: m.progress })
     },

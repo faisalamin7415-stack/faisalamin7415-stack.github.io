@@ -1,0 +1,12 @@
+{
+  "appId": "com.faiz.money",
+  "appName": "Faiz.Money",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

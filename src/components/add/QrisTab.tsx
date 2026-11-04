@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import jsQR from 'jsqr'
 import { QrCode, ScanLine, ShieldCheck, Upload } from 'lucide-react'
 import { categoriesFor, guessCategory } from '../../lib/categories'
+import { ensureCameraPermission, isNativeApp } from '../../lib/native'
 import { normalizeQrText, parseQris, type QrisData } from '../../lib/qris'
 import {
   AmountInput,
@@ -71,6 +72,16 @@ export function QrisTab({ onSave }: { onSave: (draft: Draft) => Promise<void> })
       return
     }
     try {
+      const allowed = await ensureCameraPermission()
+      if (!allowed) {
+        setError(
+          isNativeApp()
+            ? 'Izin kamera ditolak. Buka Pengaturan Android → Aplikasi → Faiz.Money → Izin → Kamera.'
+            : 'Izin kamera ditolak. Aktifkan kamera di pengaturan browser, atau unggah gambar QRIS.',
+        )
+        setPhase('error')
+        return
+      }
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 1280 } },
         audio: false,
@@ -78,7 +89,11 @@ export function QrisTab({ onSave }: { onSave: (draft: Draft) => Promise<void> })
       streamRef.current = stream
       setPhase('scanning')
     } catch {
-      setError('Izin kamera ditolak. Aktifkan kamera di pengaturan browser, atau unggah gambar QRIS.')
+      setError(
+        isNativeApp()
+          ? 'Kamera gagal dibuka. Periksa izin kamera Faiz.Money di Pengaturan Android.'
+          : 'Izin kamera ditolak. Aktifkan kamera di pengaturan browser, atau unggah gambar QRIS.',
+      )
       setPhase('error')
     }
   }

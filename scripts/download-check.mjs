@@ -43,8 +43,18 @@ async function audit(label, viewport, mobile = false) {
 
     await page.locator('label', { hasText: 'GitHub Releases' }).click()
     await page.waitForTimeout(200)
-    const href = await page.locator('a.btn-primary').first().getAttribute('href')
+    const href = await page.getByRole('link', { name: 'Unduh paket web' }).getAttribute('href')
     check('Mirror GitHub Releases terpilih', href?.includes('releases/latest/download/Faiz.Money-web.zip'), String(href))
+
+    const apkHref = await page.getByRole('link', { name: 'Unduh APK', exact: true }).getAttribute('href')
+    check('Tombol APK mengarah ke release', apkHref?.includes('releases/latest/download/Faiz.Money.apk'), String(apkHref))
+
+    const apkHead = await page.evaluate(async () => {
+      const res = await fetch('/downloads/Faiz.Money.apk', { method: 'HEAD' })
+      return { status: res.status, size: res.headers.get('content-length'), type: res.headers.get('content-type') }
+    })
+    check('APK tersedia di situs', apkHead.status === 200, `HTTP ${apkHead.status} · ${apkHead.size} bytes · ${apkHead.type}`)
+    check('latest.json memuat metadata APK', Boolean(zip.latest?.apk?.sha256), zip.latest?.apk?.sha256?.slice(0, 12))
 
     const manifest = await page.evaluate(async () => {
       const href = document.querySelector('link[rel=manifest]')?.getAttribute('href')

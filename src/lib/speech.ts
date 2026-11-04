@@ -1,4 +1,5 @@
 import { guessCategory, guessType } from './categories'
+import { isNativeApp } from './native'
 import type { TxType } from './types'
 
 /* ------------------------------------------------------------------ */
@@ -43,7 +44,7 @@ function getRecognitionCtor(): RecognitionCtor | null {
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null
 }
 
-export const speechSupported = (): boolean => getRecognitionCtor() !== null
+export const speechSupported = (): boolean => isNativeApp() || getRecognitionCtor() !== null
 
 export interface VoiceHandlers {
   onInterim: (text: string) => void
@@ -52,7 +53,94 @@ export interface VoiceHandlers {
   onEnd: () => void
 }
 
+/**
+ * Di APK Android, Web Speech API tidak tersedia di WebView. Kita pakai
+ * SpeechRecognizer native lewat plugin Capacitor agar input suara tetap jalan.
+ */
+function startNativeListening(handlers: VoiceHandlers): () => void {
+  let last = ''
+  let closed = false
+  let stopRequested = false
+  let removeListeners: (() => void) | null = null
+
+  const end = () => {
+    if (closed) return
+    closed = true
+    removeListeners?.()
+    if (last) handlers.onFinal(last)
+    handlers.onEnd()
+  }
+
+  const fail = (message: string) => {
+    if (closed) return
+    closed = true
+    removeListeners?.()
+    handlers.onError(message)
+    handlers.onEnd()
+  }
+
+  void (async () => {
+    try {
+      const { SpeechRecognition } = await import('@capacitor-community/speech-recognition')
+      if (closed) return
+
+      const partial = await SpeechRecognition.addListener('partialResults', ({ matches }) => {
+        const text = matches?.[0]?.trim()
+        if (!text) return
+        last = text
+        handlers.onInterim(text)
+      })
+      const state = await SpeechRecognition.addListener('listeningState', ({ status }) => {
+        if (status === 'stopped') end()
+      })
+      removeListeners = () => {
+        void partial.remove()
+        void state.remove()
+      }
+      if (closed) {
+        removeListeners()
+        return
+      }
+
+      const permission = await SpeechRecognition.requestPermissions()
+      if (permission.speechRecognition !== 'granted') {
+        fail('Izin mikrofon ditolak. Buka Pengaturan Android → Aplikasi → Faiz.Money → Izin → Mikrofon.')
+        return
+      }
+
+      try {
+        const { available } = await SpeechRecognition.available()
+        if (!available) {
+          fail('Pengenalan suara tidak tersedia di perangkat ini. Pasang Google App / Speech Services.')
+          return
+        }
+      } catch {
+        /* lanjut saja, sebagian perangkat tidak mendukung pengecekan */
+      }
+
+      await SpeechRecognition.start({
+        language: 'id-ID',
+        maxResults: 1,
+        partialResults: true,
+        popup: false,
+      })
+      if (stopRequested) await SpeechRecognition.stop()
+    } catch {
+      fail('Gagal memulai mikrofon. Tutup aplikasi lain yang memakai mikrofon lalu coba lagi.')
+    }
+  })()
+
+  return () => {
+    stopRequested = true
+    void import('@capacitor-community/speech-recognition')
+      .then(({ SpeechRecognition }) => SpeechRecognition.stop())
+      .catch(() => {})
+  }
+}
+
 export function startListening(handlers: VoiceHandlers): () => void {
+  if (isNativeApp()) return startNativeListening(handlers)
+
   const Ctor = getRecognitionCtor()
   if (!Ctor) {
     handlers.onError('Browser ini belum mendukung pengenalan suara. Coba Chrome atau Edge.')

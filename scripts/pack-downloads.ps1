@@ -38,7 +38,20 @@ $latest = [ordered]@{
   builtAt = $builtAt
 }
 
-$json = $latest | ConvertTo-Json
+$apkPath = Join-Path $outDir "Faiz.Money.apk"
+if (Test-Path $apkPath) {
+  $latest.apk = [ordered]@{
+    file    = "Faiz.Money.apk"
+    version = $version
+    size    = (Get-Item $apkPath).Length
+    sha256  = (Get-FileHash $apkPath -Algorithm SHA256).Hash.ToLower()
+  }
+  Write-Output "apk    : $apkPath"
+  Write-Output "apkSize: $($latest.apk.size) bytes"
+  Write-Output "apkHash: $($latest.apk.sha256)"
+}
+
+$json = $latest | ConvertTo-Json -Depth 4
 [System.IO.File]::WriteAllText((Join-Path $outDir "latest.json"), $json, (New-Object System.Text.UTF8Encoding($false)))
 
 Write-Output "zip    : $zipPath"

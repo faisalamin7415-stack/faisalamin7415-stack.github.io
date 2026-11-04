@@ -1,6 +1,6 @@
 # Faiz.Money
 
-Aplikasi pencatat pengeluaran & pemasukan yang bisa dipasang di Android, iPhone, Windows, dan Mac — langsung dari browser. Tiga cara mencatat tanpa ribet mengetik: **suara**, **foto nota**, dan **scan QRIS**.
+Aplikasi pencatat pengeluaran & pemasukan yang bisa dipasang di Android (APK), iPhone, Windows, dan Mac — langsung dari browser. Tiga cara mencatat tanpa ribet mengetik: **suara**, **foto nota**, dan **scan QRIS**.
 
 > Uang rapi, hidup tenang.
 
@@ -12,7 +12,8 @@ Aplikasi pencatat pengeluaran & pemasukan yang bisa dipasang di Android, iPhone,
 - **Grafik** — arus kas per jam, per hari, per bulan, per tahun; komposisi kategori; merchant terbesar.
 - **Cloud sync opsional** — Supabase (email + password) dengan strategi *last-write-wins*. Tanpa Supabase, aplikasi tetap berjalan penuh secara lokal.
 - **PWA installable** — service worker, offline shell, dan manifest. Bisa dipasang ke layar utama di semua perangkat.
-- **Pusat unduhan** — panduan pemasangan per platform (Android, iOS, Windows, macOS, Linux), paket web offline, dan pilihan mirror unduhan.
+- **APK Android** — aplikasi asli (Capacitor) yang membundel seluruh aset, mesin OCR, dan model bahasa di dalam paket. Tidak butuh situs web dan tetap jalan offline.
+- **Pusat unduhan** — panduan pemasangan per platform (Android, iOS, Windows, macOS, Linux), APK Android, paket web offline, dan pilihan mirror unduhan.
 - **Backup** — ekspor/impor JSON dan ekspor CSV untuk Excel.
 
 ## Palet & karakter visual
@@ -72,8 +73,28 @@ Situs ini dilayani dari branch `gh-pages` (bukan branch `main`). Setelah menguba
 npm run build
 npm run pack:downloads   # membuat dist/downloads/Faiz.Money-web.zip + latest.json
 # unggah isi dist/ ke branch gh-pages
-gh release upload v1.0.0 dist/downloads/Faiz.Money-web.zip --clobber
+gh release upload v1.0.0 dist/downloads/Faiz.Money-web.zip dist/downloads/Faiz.Money.apk --clobber
 ```
+
+### Build APK Android
+
+APK dibangun dengan Capacitor 7 dan membundel seluruh aset web + mesin OCR, jadi tidak butuh situs online.
+
+```bash
+npm run ocr:assets     # unduh model OCR ke public/ (sekali saja)
+npm run android:build  # build web + sync + assembleRelease
+```
+
+Hasil build: `android/app/build/outputs/apk/release/app-release.apk`, lalu disalin ke `dist/downloads/Faiz.Money.apk`.
+
+Prasyarat: JDK 21 (Capacitor 7 mengompilasi dengan Java 21), Android SDK 35, dan build-tools. Jika `JAVA_HOME` masih JDK 17, jalankan dengan JDK 21:
+
+```powershell
+$env:JAVA_HOME = "D:\dev\jdk\jdk-21.0.13.0.2+1"
+npm run android:build
+```
+
+Kunci tanda tangan ada di `android/keystore/` (tidak di-commit). Simpan cadangannya: APK versi berikutnya harus ditandatangani kunci yang sama agar bisa memperbarui aplikasi yang sudah terpasang.
 
 Branch `main` menyimpan kode sumber; branch `gh-pages` hanya berisi hasil build. Naikkan `version` di `package.json` dan buat tag rilis baru untuk versi berikutnya.
 
@@ -86,7 +107,7 @@ gh api -X PUT repos/faisalamin7415-stack/faisalamin7415-stack.github.io/pages \
 
 Setelah online lewat HTTPS, aplikasi bisa dipasang:
 
-- **Android (Chrome)** — menu ⋮ → *Instal aplikasi*.
+- **Android** — unduh `Faiz.Money.apk` dari halaman unduhan atau GitHub Releases, lalu pasang (izinkan sumber tidak dikenal).
 - **iPhone (Safari)** — Bagikan → *Tambahkan ke Layar Utama*.
 - **Windows/Mac (Chrome/Edge)** — ikon instal di address bar.
 

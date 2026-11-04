@@ -31,6 +31,8 @@ const REPO_URL = 'https://github.com/faisalamin7415-stack/faisalamin7415-stack.g
 const WEB_ZIP = '/downloads/Faiz.Money-web.zip'
 const RELEASE_ZIP = `${REPO_URL}/releases/latest/download/Faiz.Money-web.zip`
 const SOURCE_ZIP = `${REPO_URL}/archive/refs/heads/main.zip`
+const APK_SITE = '/downloads/Faiz.Money.apk'
+const APK_RELEASE = `${REPO_URL}/releases/latest/download/Faiz.Money.apk`
 
 const PLATFORMS: Array<{
   id: PlatformId
@@ -42,12 +44,12 @@ const PLATFORMS: Array<{
   {
     id: 'android',
     name: 'Android',
-    hint: 'Chrome · Edge · Samsung Internet',
+    hint: 'APK · Android 6.0+',
     icon: Smartphone,
     steps: [
-      'Buka situs ini di Chrome.',
-      'Tap menu ⋮ di kanan atas.',
-      'Pilih “Instal aplikasi” lalu konfirmasi.',
+      'Unduh file Faiz.Money.apk.',
+      'Buka file, lalu izinkan “Instal dari sumber tidak dikenal” bila diminta.',
+      'Aplikasi terpasang dengan ikon Faiz.Money, tanpa browser.',
     ],
   },
   {
@@ -143,6 +145,12 @@ interface Latest {
   size?: number
   sha256?: string
   builtAt?: string
+  apk?: {
+    file?: string
+    version?: string
+    size?: number
+    sha256?: string
+  }
 }
 
 function detectPlatform(): PlatformId {
@@ -272,15 +280,21 @@ export function Download() {
         <span className="text-teal-300">semua perangkat.</span>
       </h1>
       <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-cream/45">
-        Pasang Faiz.Money sebagai aplikasi di HP, tablet, atau laptop. Tanpa toko aplikasi,
-        tanpa file APK — cukup browser dan koneksi sekali saja.
+        Di Android, unduh file APK dan pasang seperti aplikasi biasa — bukan sekadar bookmark
+        browser. Di iPhone, Windows, macOS, dan Linux, Faiz.Money dipasang sebagai PWA.
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
-        <button type="button" onClick={install} className="btn-primary px-5 py-3">
-          <DownloadIcon size={16} />
-          {canInstall ? 'Pasang sekarang' : `Cara pasang di ${platform.name}`}
-        </button>
+        {detected === 'android' ? (
+          <a href={APK_RELEASE} className="btn-primary px-5 py-3">
+            <DownloadIcon size={16} /> Unduh APK Android
+          </a>
+        ) : (
+          <button type="button" onClick={install} className="btn-primary px-5 py-3">
+            <DownloadIcon size={16} />
+            {canInstall ? 'Pasang sekarang' : `Cara pasang di ${platform.name}`}
+          </button>
+        )}
         <button type="button" onClick={() => void share()} className="btn-ghost">
           <Share2 size={15} /> Bagikan
         </button>
@@ -309,11 +323,15 @@ export function Download() {
           <div className="text-[10px] uppercase tracking-[0.16em] text-cream/35">Terdeteksi</div>
           <div className="truncate text-[13.5px] font-medium text-cream">{platform.name}</div>
           <div className="text-[11.5px] text-cream/40">
-            {canInstall ? 'Siap dipasang sekarang.' : 'Ikuti panduan di bawah.'}
+            {detected === 'android'
+              ? 'APK siap diunduh dan dipasang langsung.'
+              : canInstall
+                ? 'Siap dipasang sekarang.'
+                : 'Ikuti panduan di bawah.'}
           </div>
         </div>
-        <span className={`chip ${canInstall ? 'border-teal-500/30 text-teal-200' : ''}`}>
-          {canInstall ? 'Siap' : 'PWA'}
+        <span className={`chip ${canInstall || detected === 'android' ? 'border-teal-500/30 text-teal-200' : ''}`}>
+          {detected === 'android' ? 'APK' : canInstall ? 'Siap' : 'PWA'}
         </span>
       </div>
 
@@ -367,7 +385,13 @@ export function Download() {
                   ))}
                 </ol>
 
-                {active && canInstall && (
+                {active && item.id === 'android' && (
+                  <a href={APK_RELEASE} className="btn-primary mt-3 w-full py-2.5 text-[12.5px]">
+                    <DownloadIcon size={14} /> Unduh APK Android
+                  </a>
+                )}
+
+                {active && item.id !== 'android' && canInstall && (
                   <button
                     type="button"
                     onClick={() => void installApp()}
@@ -382,6 +406,92 @@ export function Download() {
         </div>
       </section>
 
+      {/* ---------------- Android APK ---------------- */}
+      <section className="mt-8 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="card min-w-0 overflow-hidden p-4 sm:p-5">
+          <div className="flex items-center gap-2">
+            <Smartphone size={15} className="text-teal-300" />
+            <h2 className="text-[13.5px] font-medium text-cream">Aplikasi Android (APK)</h2>
+            <span className="chip border-teal-500/30 px-1.5 py-0 text-[9.5px] text-teal-200">
+              {latest?.apk?.version ? `v${latest.apk.version}` : 'Terbaru'}
+            </span>
+          </div>
+          <p className="mt-1 text-[11.5px] leading-relaxed text-cream/40">
+            File aplikasi asli untuk Android. Seluruh aset sudah dibundel di dalam APK, jadi
+            aplikasi tetap jalan tanpa situs web dan tanpa koneksi.
+          </p>
+
+          <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-line bg-ink-900/40 px-3.5 py-3">
+            <div className="min-w-0">
+              <div className="truncate text-[12.5px] font-medium text-cream">Faiz.Money.apk</div>
+              <div className="text-[10.5px] text-cream/35">
+                {formatBytes(latest?.apk?.size ?? latest?.size)}
+                {latest?.apk?.version ? ` · v${latest.apk.version}` : ' · build terbaru'}
+              </div>
+            </div>
+            <span className="chip shrink-0 border-teal-500/30 text-teal-200">
+              <ShieldCheck size={11} /> APK
+            </span>
+          </div>
+
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
+            <a href={APK_RELEASE} className="btn-primary justify-center py-3">
+              <DownloadIcon size={15} /> Unduh APK
+            </a>
+            <a href={APK_SITE} className="btn-ghost justify-center py-3">
+              <Server size={15} /> Mirror situs
+            </a>
+          </div>
+
+          <div className="mt-3 min-w-0 rounded-xl border border-line bg-ink-900/40 p-3">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[10px] uppercase tracking-[0.14em] text-cream/35">SHA-256 APK</span>
+              <button
+                type="button"
+                onClick={() => {
+                  const hash = latest?.apk?.sha256
+                  if (!hash) return
+                  void navigator.clipboard
+                    .writeText(hash)
+                    .then(() => toast('SHA-256 APK disalin.', 'success'))
+                    .catch(() => toast('Gagal menyalin checksum.', 'error'))
+                }}
+                disabled={!latest?.apk?.sha256}
+                aria-label="Salin checksum SHA-256 APK"
+                className="text-cream/40 transition-colors hover:text-cream disabled:opacity-40"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+            <code className="mt-1 block truncate font-mono text-[10px] text-cream/55">
+              {latest?.apk?.sha256 ?? 'Tersedia setelah build berikutnya'}
+            </code>
+          </div>
+        </div>
+
+        <div className="card min-w-0 overflow-hidden p-4 sm:p-5">
+          <h2 className="text-[13.5px] font-medium text-cream">Cara memasang APK</h2>
+          <ol className="mt-3 space-y-2.5">
+            {[
+              'Unduh Faiz.Money.apk lewat tombol di samping.',
+              'Buka file dari notifikasi atau folder Unduhan.',
+              'Jika diminta, aktifkan “Instal dari sumber tidak dikenal” untuk aplikasi file manager/browser.',
+              'Tap Instal, lalu buka Faiz.Money dari layar utama.',
+            ].map((step, index) => (
+              <li key={step} className="flex gap-2 text-[11.5px] leading-relaxed text-cream/50">
+                <span className="tnum shrink-0 text-cream/25">{String(index + 1).padStart(2, '0')}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 flex gap-2 text-[10.5px] leading-relaxed text-cream/30">
+            <ShieldCheck size={13} className="mt-0.5 shrink-0" />
+            APK ini ditandatangani sendiri (bukan dari Play Store). Android akan menampilkan
+            peringatan standar saat pemasangan dari luar toko aplikasi.
+          </p>
+        </div>
+      </section>
+
       {/* ---------------- download mirrors ---------------- */}
       <section className="mt-8 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="card min-w-0 overflow-hidden p-4 sm:p-5">
@@ -390,7 +500,8 @@ export function Download() {
             <h2 className="text-[13.5px] font-medium text-cream">Paket web offline</h2>
           </div>
           <p className="mt-1 text-[11.5px] leading-relaxed text-cream/40">
-            Arsip build siap pasang di hosting sendiri. Pilih mirror, lalu unduh.
+            Untuk iPhone, Windows, macOS, dan Linux: arsip build siap pasang di hosting sendiri.
+            Pilih mirror, lalu unduh.
           </p>
 
           <div className="mt-4 flex items-center justify-between rounded-xl border border-line bg-ink-900/40 px-3.5 py-3">
@@ -519,8 +630,8 @@ export function Download() {
 
           <p className="mt-4 flex gap-2 text-[10.5px] leading-relaxed text-cream/30">
             <ShieldCheck size={13} className="mt-0.5 shrink-0" />
-            Faiz.Money adalah PWA — tidak ada APK atau EXE terpisah. Paket web dipakai untuk
-            hosting sendiri atau cadangan offline.
+            APK hanya untuk Android. iPhone, Windows, macOS, dan Linux memakai paket web/PWA
+            karena sistemnya tidak mengizinkan pemasangan file aplikasi di luar toko resmi.
           </p>
         </div>
       </section>
@@ -532,15 +643,19 @@ export function Download() {
           {[
             [
               'Apakah ada file APK?',
-              'Tidak. Faiz.Money dipasang langsung dari browser sebagai PWA, jadi selalu versi terbaru tanpa update manual.',
+              'Ya, khusus Android. Unduh Faiz.Money.apk, buka filenya, lalu izinkan pemasangan dari sumber tidak dikenal. Di iPhone dan komputer, Faiz.Money dipasang sebagai PWA.',
+            ],
+            [
+              'Apakah APK-nya dari Play Store?',
+              'Bukan. APK ini ditandatangani sendiri dan dipasang langsung (sideload). Android akan menampilkan peringatan standar sebelum pemasangan.',
             ],
             [
               'Apakah data saya ikut terunduh?',
-              'Tidak. Data transaksi tersimpan di IndexedDB perangkat. Paket web hanya berisi file aplikasi.',
+              'Tidak. Data transaksi tersimpan di perangkat. File APK/ZIP hanya berisi aplikasi, bukan data pengguna.',
             ],
             [
               'Bisa dipakai tanpa internet?',
-              'Bisa, setelah dibuka sekali. Service worker menyimpan tampilan aplikasi agar tetap jalan offline.',
+              'Bisa. Di APK, seluruh tampilan, mesin OCR, dan model bahasa sudah dibundel. Di versi web, service worker menyimpan tampilan setelah dibuka sekali.',
             ],
           ].map(([question, answer]) => (
             <details key={question} className="group py-3">

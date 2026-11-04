@@ -9,6 +9,7 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
         name: 'Faiz.Money',
@@ -30,6 +31,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // Mesin OCR besar dimuat saat dibutuhkan, bukan di precache awal.
+        globIgnores: ['**/tesseract/**', '**/tessdata/**'],
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
         navigateFallback: '/index.html',
         runtimeCaching: [
