@@ -1,7 +1,7 @@
 {
   "name": "faiz-money",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "Faiz.Money - catat pengeluaran & pemasukan lewat suara, foto nota, dan QRIS.",
   "scripts": {
@@ -13,7 +13,8 @@
     "android:assets": "node scripts/make-android-assets.mjs",
     "android:build": "powershell -ExecutionPolicy Bypass -File scripts/build-apk.ps1",
     "pack:downloads": "powershell -ExecutionPolicy Bypass -File scripts/pack-downloads.ps1",
-    "test:income": "node scripts/income-check.mjs"
+    "test:income": "node scripts/income-check.mjs",
+    "test:unduh": "node scripts/unduh-check.mjs"
   },
   "dependencies": {
     "@capacitor-community/speech-recognition": "^7.0.1",

@@ -273,16 +273,27 @@ export function Download() {
 
   return (
     <div className="animate-fade-up">
-      <p className="label">Pusat unduhan</p>
+      <p className="label">Multi-platform download</p>
       <h1 className="mt-2 font-display text-[32px] leading-[1.05] tracking-tight text-cream sm:text-[42px]">
-        Satu aplikasi,
+        Multi-Platform
         <br />
-        <span className="text-teal-300">semua perangkat.</span>
+        <span className="text-teal-300">Download System</span>
       </h1>
-      <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-cream/45">
-        Di Android, unduh file APK dan pasang seperti aplikasi biasa — bukan sekadar bookmark
-        browser. Di iPhone, Windows, macOS, dan Linux, Faiz.Money dipasang sebagai PWA.
+      <p className="mt-2 font-display text-[18px] leading-tight text-cream/55 sm:text-[20px]">
+        with Download Mirror
       </p>
+      <p className="mt-3 max-w-xl text-[13px] leading-relaxed text-cream/45">
+        Unduh Faiz.Money untuk Android sebagai APK asli, atau pasang sebagai PWA di iPhone,
+        Windows, macOS, dan Linux. Pilih mirror unduhan yang paling cepat untuk perangkat Anda.
+      </p>
+
+      <div className="mt-4 flex max-w-2xl items-start gap-2.5 rounded-xl border border-teal-500/25 bg-teal-900/15 px-3.5 py-3 text-[11.5px] leading-relaxed text-teal-100/75">
+        <ShieldCheck size={15} className="mt-0.5 shrink-0 text-teal-300" />
+        <p>
+          Halaman ini hanya berisi unduhan aplikasi. Tidak ada transaksi, saldo, atau laporan
+          keuangan yang ditampilkan di sini.
+        </p>
+      </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {detected === 'android' ? (
@@ -493,7 +504,18 @@ export function Download() {
       </section>
 
       {/* ---------------- download mirrors ---------------- */}
-      <section className="mt-8 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+      <section className="mt-8">
+        <div className="flex items-end justify-between gap-3">
+          <div>
+            <h2 className="font-display text-[24px] leading-tight text-cream">Download Mirror</h2>
+            <p className="text-[11.5px] text-cream/40">
+              Tiga jalur unduhan: situs ini, GitHub Releases, dan kode sumber.
+            </p>
+          </div>
+          <span className="chip">{MIRRORS.length} mirror</span>
+        </div>
+
+        <div className="mt-3 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="card min-w-0 overflow-hidden p-4 sm:p-5">
           <div className="flex items-center gap-2">
             <Package size={15} className="text-cream/50" />
@@ -633,6 +655,7 @@ export function Download() {
             APK hanya untuk Android. iPhone, Windows, macOS, dan Linux memakai paket web/PWA
             karena sistemnya tidak mengizinkan pemasangan file aplikasi di luar toko resmi.
           </p>
+        </div>
         </div>
       </section>
 

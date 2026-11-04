@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import {
+  ArrowLeft,
   ArrowLeftRight,
   ChartNoAxesColumn,
   Download,
@@ -32,13 +33,52 @@ export function AppShell({
   route,
   onNavigate,
   children,
+  standalone = false,
 }: {
   route: RouteId
   onNavigate: (r: RouteId) => void
   children: ReactNode
+  standalone?: boolean
 }) {
   const { openAdd, profileName, user, canInstall, installApp } = useApp()
   const initial = profileName.charAt(0).toUpperCase() || 'F'
+
+  // Halaman unduhan tampil sebagai halaman publik: tanpa sidebar, profil,
+  // tombol catat transaksi, atau data keuangan apa pun.
+  if (standalone) {
+    return (
+      <div className="relative z-10 flex min-h-dvh flex-col">
+        <header className="border-b border-line bg-ink-900/50 backdrop-blur-xl">
+          <div className="mx-auto flex w-full max-w-[1080px] items-center justify-between gap-3 px-4 py-3 sm:px-8">
+            <Logo />
+            <div className="flex items-center gap-2">
+              <span className="chip hidden sm:inline-flex">Halaman unduhan</span>
+              <button
+                type="button"
+                onClick={() => onNavigate('beranda')}
+                className="btn-ghost px-3 py-2 text-[12px]"
+              >
+                <ArrowLeft size={14} /> Buka aplikasi
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1">
+          <div className="mx-auto w-full max-w-[1080px] px-4 pb-16 pt-6 sm:px-8 sm:pt-10">
+            {children}
+          </div>
+        </main>
+
+        <footer className="border-t border-line">
+          <div className="mx-auto flex w-full max-w-[1080px] flex-wrap items-center justify-between gap-2 px-4 py-4 text-[10.5px] text-cream/30 sm:px-8">
+            <span>Faiz.Money · pusat unduhan multi-platform</span>
+            <span>APK Android · PWA untuk iPhone, Windows, macOS, Linux</span>
+          </div>
+        </footer>
+      </div>
+    )
+  }
 
   return (
     <div className="relative z-10 min-h-dvh">

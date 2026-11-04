@@ -34,7 +34,7 @@ export default function App() {
   return (
     <ToastProvider>
       <AppProvider>
-        <AppShell route={route} onNavigate={navigate}>
+        <AppShell route={route} onNavigate={navigate} standalone={route === 'unduh'}>
           {route === 'beranda' && <Dashboard />}
           {route === 'transaksi' && <Transactions />}
           {route === 'laporan' && <Reports />}

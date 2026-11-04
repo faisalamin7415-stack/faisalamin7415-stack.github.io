@@ -21,7 +21,10 @@ async function audit(label, viewport, mobile = false) {
   await page.waitForTimeout(1200)
 
   const text = await page.locator('body').innerText()
-  check(`[${label}] Halaman unduhan tampil`, text.includes('Satu aplikasi') && text.toLowerCase().includes('pusat unduhan'))
+  check(
+    `[${label}] Halaman unduhan tampil`,
+    /multi-platform/i.test(text) && /download system/i.test(text) && /download mirror/i.test(text),
+  )
   check(`[${label}] 6 kartu platform`, (await page.locator('article[id^="platform-"]').count()) === 6)
   check(`[${label}] 3 mirror`, (await page.locator('input[name="mirror"]').count()) === 3)
   check(`[${label}] QR termuat`, await page.locator('img[alt*="QR"]').evaluate((img) => img.naturalWidth > 0))
@@ -69,7 +72,10 @@ async function audit(label, viewport, mobile = false) {
     await page.getByRole('button', { name: 'Pusat unduhan' }).click()
     await page.waitForTimeout(500)
     const bodyAfter = await page.locator('body').innerText()
-    check('Navigasi header ke unduhan', page.url().includes('#unduh') && bodyAfter.includes('Satu aplikasi'))
+    check(
+      'Navigasi header ke unduhan',
+      page.url().includes('#unduh') && /multi-platform/i.test(bodyAfter),
+    )
   }
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)
