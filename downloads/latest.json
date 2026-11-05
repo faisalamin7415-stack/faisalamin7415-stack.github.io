@@ -1,0 +1,13 @@
+{
+    "file":  "Faiz.Money-web.zip",
+    "version":  "1.1.2",
+    "size":  19956060,
+    "sha256":  "f3e4ad3c96870b3ff761e87231d7fcfd4c99c5a9dd305a28c609e12e7c01a5fe",
+    "builtAt":  "2026-11-05T04:14:58.6531532Z",
+    "apk":  {
+                "file":  "Faiz.Money.apk",
+                "version":  "1.1.2",
+                "size":  25715335,
+                "sha256":  "73f73b8150f136f1d1af04f423814b931dcdecd02604bf9c4e73653f34e6e78b"
+            }
+}
