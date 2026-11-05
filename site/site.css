@@ -1,0 +1,5 @@
+@import '../src/index.css';
+
+/* Tailwind memindai seluruh komponen aplikasi agar kelas utilitas yang
+   dipakai halaman unduhan tetap ikut ter-build saat root diarahkan ke `site`. */
+@source '../src';

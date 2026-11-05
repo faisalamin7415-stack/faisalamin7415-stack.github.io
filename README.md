@@ -58,23 +58,31 @@ npm run build     # menghasilkan folder dist/
 npm run preview   # cek hasil build secara lokal
 ```
 
-> **Status publikasi:** situs `https://faisalamin7415-stack.github.io/` sedang **tidak dipublikasikan** (GitHub Pages diarahkan ke branch `offline` yang kosong, sehingga URL mengembalikan 404). Kode dan release tetap tersimpan.
+> **Status publikasi:** `https://faisalamin7415-stack.github.io/` adalah **situs unduhan publik** — hanya halaman *Multi-Platform Download System with Download Mirror*. Aplikasi keuangan (transaksi, saldo, laporan) **tidak** dipublikasikan ke web; data itu hanya ada di APK/PWA di perangkat pengguna.
 
-Deploy folder `dist/` ke hosting statis apa pun:
+Situs unduhan dibangun terpisah dari aplikasi keuangan:
+
+```bash
+npm run site:build     # build halaman unduhan ke site-dist/
+npm run site:preview   # cek hasilnya secara lokal
+npm run test:site      # uji: tanpa data keuangan, tanpa APK lokal, dsb.
+npm run site:publish   # build + push ke branch gh-pages + atur GitHub Pages
+```
+
+`site-dist/` hanya berisi HTML/CSS/JS halaman unduhan, ikon, QR, dan `downloads/latest.json` (versi + checksum). APK dan ZIP **tidak** dihosting di Pages; tautan unduhan diarahkan ke GitHub Releases. Jalankan `npm run pack:downloads` sebelum publish agar metadata versi terbaru ikut tersalin.
+
+Deploy aplikasi keuangan (opsional, bukan situs publik) memakai folder `dist/`:
 
 - **Vercel** — `vercel.json` sudah disertakan (rewrite SPA).
 - **Netlify** — `public/_redirects` sudah disertakan.
 - **Cloudflare Pages** — upload `dist/`, pastikan fallback ke `index.html`.
 
-### Deploy ulang ke GitHub Pages
-
-Situs ini dilayani dari branch `gh-pages` (bukan branch `main`). Setelah mengubah kode:
+### Rilis APK & paket web
 
 ```bash
-npm run build
+npm run android:build
 npm run pack:downloads   # membuat dist/downloads/Faiz.Money-web.zip + latest.json
-# unggah isi dist/ ke branch gh-pages
-gh release upload v1.1.1 dist/downloads/Faiz.Money-web.zip dist/downloads/Faiz.Money.apk --clobber
+gh release upload v1.1.2 dist/downloads/Faiz.Money-web.zip dist/downloads/Faiz.Money.apk --clobber
 ```
 
 ### Build APK Android

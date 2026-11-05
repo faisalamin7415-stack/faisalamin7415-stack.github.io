@@ -20,7 +20,7 @@ import {
   Wifi,
   WifiOff,
 } from 'lucide-react'
-import { useApp } from '../store/app'
+import { useInstallPrompt } from '../lib/install'
 import { useToast } from '../store/toast'
 
 type PlatformId = 'android' | 'ios' | 'windows' | 'macos' | 'linux' | 'other'
@@ -109,7 +109,18 @@ const PLATFORMS: Array<{
   },
 ]
 
-const MIRRORS = [
+interface Mirror {
+  id: string
+  name: string
+  detail: string
+  url: string
+  icon: typeof Server
+  badge: string
+  cross: boolean
+  action?: 'download' | 'open'
+}
+
+const MIRRORS_APP: Mirror[] = [
   {
     id: 'site',
     name: 'Situs ini',
@@ -137,7 +148,40 @@ const MIRRORS = [
     badge: 'Sumber',
     cross: true,
   },
-] as const
+]
+
+// Situs publik tidak menghosting file biner; semua unduhan diarahkan ke
+// GitHub Releases supaya halaman tetap ringan dan tidak menyimpan data apa pun.
+const MIRRORS_PUBLIC: Mirror[] = [
+  {
+    id: 'release',
+    name: 'GitHub Releases',
+    detail: 'APK Android & paket web resmi',
+    url: RELEASE_ZIP,
+    icon: CloudDownload,
+    badge: 'Utama',
+    cross: true,
+  },
+  {
+    id: 'source',
+    name: 'Kode sumber',
+    detail: 'Arsip branch main (ZIP)',
+    url: SOURCE_ZIP,
+    icon: Code,
+    badge: 'Sumber',
+    cross: true,
+  },
+  {
+    id: 'all',
+    name: 'Semua rilis',
+    detail: 'APK & arsip versi sebelumnya',
+    url: `${REPO_URL}/releases`,
+    icon: Package,
+    badge: 'Arsip',
+    cross: true,
+    action: 'open',
+  },
+]
 
 interface Latest {
   file?: string
@@ -170,22 +214,28 @@ function formatBytes(value?: number) {
   return `${(value / 1024 / 1024).toFixed(2)} MB`
 }
 
-export function Download() {
-  const { canInstall, installApp } = useApp()
+export function Download({ variant = 'app' }: { variant?: 'app' | 'public' }) {
+  const publicSite = variant === 'public'
+  const { canInstall, installApp } = useInstallPrompt()
   const { toast } = useToast()
   const detected = useMemo(detectPlatform, [])
-  const [mirrorId, setMirrorId] = useState<string>('site')
+  const mirrors = publicSite ? MIRRORS_PUBLIC : MIRRORS_APP
+  const [mirrorId, setMirrorId] = useState<string>(mirrors[0].id)
   const [status, setStatus] = useState<Record<string, MirrorState>>({})
   const [latest, setLatest] = useState<Latest | null>(null)
   const [copied, setCopied] = useState(false)
 
   const platform = PLATFORMS.find((p) => p.id === detected) ?? PLATFORMS[PLATFORMS.length - 1]
-  const selected = MIRRORS.find((m) => m.id === mirrorId) ?? MIRRORS[0]
+  const selected = mirrors.find((m) => m.id === mirrorId) ?? mirrors[0]
+
+  useEffect(() => {
+    if (!mirrors.some((m) => m.id === mirrorId)) setMirrorId(mirrors[0].id)
+  }, [mirrors, mirrorId])
 
   const checkMirrors = useCallback(async () => {
-    setStatus(Object.fromEntries(MIRRORS.map((m) => [m.id, 'checking'])) as Record<string, MirrorState>)
+    setStatus(Object.fromEntries(mirrors.map((m) => [m.id, 'checking'])) as Record<string, MirrorState>)
     await Promise.all(
-      MIRRORS.map(async (mirror) => {
+      mirrors.map(async (mirror) => {
         try {
           const res = await fetch(
             mirror.url,
@@ -200,7 +250,7 @@ export function Download() {
         }
       }),
     )
-  }, [])
+  }, [mirrors])
 
   useEffect(() => {
     void checkMirrors()
@@ -309,9 +359,15 @@ export function Download() {
         <button type="button" onClick={() => void share()} className="btn-ghost">
           <Share2 size={15} /> Bagikan
         </button>
-        <a href="#beranda" className="btn-ghost">
-          <ExternalLink size={15} /> Buka aplikasi
-        </a>
+        {publicSite ? (
+          <a href={RELEASE_ZIP} className="btn-ghost">
+            <DownloadIcon size={15} /> Unduh paket web
+          </a>
+        ) : (
+          <a href="#beranda" className="btn-ghost">
+            <ExternalLink size={15} /> Buka aplikasi
+          </a>
+        )}
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -449,8 +505,13 @@ export function Download() {
             <a href={APK_RELEASE} className="btn-primary justify-center py-3">
               <DownloadIcon size={15} /> Unduh APK
             </a>
-            <a href={APK_SITE} className="btn-ghost justify-center py-3">
-              <Server size={15} /> Mirror situs
+            <a
+              href={publicSite ? `${REPO_URL}/releases` : APK_SITE}
+              target={publicSite ? '_blank' : undefined}
+              rel={publicSite ? 'noreferrer' : undefined}
+              className="btn-ghost justify-center py-3"
+            >
+              <Server size={15} /> {publicSite ? 'Semua rilis' : 'Mirror situs'}
             </a>
           </div>
 
@@ -509,10 +570,12 @@ export function Download() {
           <div>
             <h2 className="font-display text-[24px] leading-tight text-cream">Download Mirror</h2>
             <p className="text-[11.5px] text-cream/40">
-              Tiga jalur unduhan: situs ini, GitHub Releases, dan kode sumber.
+              {publicSite
+                ? 'Jalur unduhan resmi: GitHub Releases, kode sumber, dan arsip rilis.'
+                : 'Tiga jalur unduhan: situs ini, GitHub Releases, dan kode sumber.'}
             </p>
           </div>
-          <span className="chip">{MIRRORS.length} mirror</span>
+          <span className="chip">{mirrors.length} mirror</span>
         </div>
 
         <div className="mt-3 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
@@ -540,7 +603,7 @@ export function Download() {
           </div>
 
           <div className="mt-3 space-y-2">
-            {MIRRORS.map((mirror) => {
+            {mirrors.map((mirror) => {
               const Icon = mirror.icon
               const active = mirror.id === mirrorId
               return (
@@ -582,11 +645,17 @@ export function Download() {
 
           <a
             href={selected.url}
-            download={selected.cross ? undefined : 'Faiz.Money-web.zip'}
+            download={selected.cross || selected.action === 'open' ? undefined : 'Faiz.Money-web.zip'}
+            target={selected.action === 'open' ? '_blank' : undefined}
+            rel={selected.action === 'open' ? 'noreferrer' : undefined}
             className="btn-primary mt-4 w-full py-3"
           >
             <DownloadIcon size={16} />
-            {selected.id === 'source' ? 'Unduh kode sumber' : 'Unduh paket web'}
+            {selected.action === 'open'
+              ? 'Buka semua rilis'
+              : selected.id === 'source'
+                ? 'Unduh kode sumber'
+                : 'Unduh paket web'}
           </a>
 
           <div className="mt-2 flex items-center justify-between gap-2">
@@ -680,6 +749,14 @@ export function Download() {
               'Bisa dipakai tanpa internet?',
               'Bisa. Di APK, seluruh tampilan, mesin OCR, dan model bahasa sudah dibundel. Di versi web, service worker menyimpan tampilan setelah dibuka sekali.',
             ],
+            ...(publicSite
+              ? [
+                  [
+                    'Apakah data keuangan saya tampil di situs ini?',
+                    'Tidak. Situs ini hanya pusat unduhan. Tidak ada transaksi, saldo, pemasukan, pengeluaran, atau laporan keuangan yang ditampilkan maupun diunggah ke sini. Catatan keuangan Anda tetap tersimpan lokal di perangkat masing-masing.',
+                  ],
+                ]
+              : []),
           ].map(([question, answer]) => (
             <details key={question} className="group py-3">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-[12.5px] font-medium text-cream/80">

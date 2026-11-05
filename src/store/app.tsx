@@ -9,17 +9,13 @@ import {
   type ReactNode,
 } from 'react'
 import type { User } from '@supabase/supabase-js'
+import { useInstallPrompt } from '../lib/install'
 import { cloudConfigured, friendlyAuthError, supabase } from '../lib/supabase'
 import { getLastSync, syncNow } from '../lib/sync'
 import type { AddTab, NewTransaction } from '../lib/types'
 import { useToast } from './toast'
 
 type SyncState = 'idle' | 'syncing' | 'error' | 'offline'
-
-interface InstallEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
-}
 
 interface AppContextValue {
   user: User | null
@@ -49,6 +45,7 @@ const NAME_KEY = 'faiz:name'
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast()
+  const { canInstall, installApp } = useInstallPrompt()
   const [user, setUser] = useState<User | null>(null)
   const [authReady, setAuthReady] = useState(!cloudConfigured)
   const [syncState, setSyncState] = useState<SyncState>('idle')
@@ -60,8 +57,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [profileName, setProfileNameState] = useState(
     () => localStorage.getItem(NAME_KEY) ?? 'Faiz',
   )
-  const [canInstall, setCanInstall] = useState(false)
-  const installEvent = useRef<InstallEvent | null>(null)
   const syncing = useRef(false)
 
   /* ---------------- auth ---------------- */
@@ -131,40 +126,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setSyncState('idle')
     }
   }, [user])
-
-  /* ---------------- install prompt ---------------- */
-  useEffect(() => {
-    const onPrompt = (e: Event) => {
-      e.preventDefault()
-      installEvent.current = e as InstallEvent
-      setCanInstall(true)
-    }
-    const onInstalled = () => {
-      setCanInstall(false)
-      installEvent.current = null
-      toast('Faiz.Money berhasil dipasang di perangkat.', 'success')
-    }
-    window.addEventListener('beforeinstallprompt', onPrompt)
-    window.addEventListener('appinstalled', onInstalled)
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onPrompt)
-      window.removeEventListener('appinstalled', onInstalled)
-    }
-  }, [toast])
-
-  const installApp = useCallback(async () => {
-    const ev = installEvent.current
-    if (!ev) {
-      toast('Gunakan menu browser → “Instal aplikasi” / “Tambahkan ke Layar Utama”.')
-      return
-    }
-    await ev.prompt()
-    const choice = await ev.userChoice
-    if (choice.outcome === 'accepted') {
-      setCanInstall(false)
-      installEvent.current = null
-    }
-  }, [toast])
 
   /* ---------------- auth actions ---------------- */
   const signIn = useCallback(async (email: string, password: string) => {
